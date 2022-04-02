@@ -20,7 +20,7 @@ RUN unzip /tmp/discuz.zip \
     && mv upload/* ${DZ_WWW_ROOT} \
     && cd ${DZ_WWW_ROOT} \
     && chmod a+w -R config data uc_server/data uc_client/data \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/Lib/apt/lists/*
 
 EXPOSE 80/tcp
 

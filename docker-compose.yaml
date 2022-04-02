@@ -10,7 +10,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./runtime/mysql:/var/lib/mysql
+      - ./runtime/mysql:/var/Lib/mysql
 
   web:
     build: ./build/docker

@@ -1,0 +1,26 @@
+{eval
+function tpl_post_attribute_extra_body($editor='md',$content='') {
+global $_G;
+}
+<!--{block return}-->
+    <script src="{$_G['siteurl']}source/plugin/codfrm_markdown/dist/editor.js"></script>
+
+<div id="mk-editor">{$content}</div>
+
+<!--{if $editor=='md'}-->
+    <a id="switch-editor" href="#">使用默认编辑器</a>
+<!--{else}-->
+    <a href="#">使用狂炫酷爆吊炸天的markdown编辑器</a>
+<!--{/if}-->
+
+
+    <script>
+        initeditor("{$editor}");
+    </script>
+
+<!--{/block}-->
+<!--{eval return $return;}-->
+{eval
+}
+
+}
