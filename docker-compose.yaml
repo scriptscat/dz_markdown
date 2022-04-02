@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+
+  mysql:
+    image: mariadb:10.6
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=dz
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./runtime/mysql:/var/lib/mysql
+
+  web:
+    build: ./build/docker
+    ports:
+      - "80:80"
+    volumes:
+    - ./app.conf:/etc/nginx/conf.d/default.conf
+    - ./runtime/config:/var/www/html/config
+    - ./src:/var/www/html/source/plugin/codfrm_markdown
+    links:
+      - "mysql:database"
