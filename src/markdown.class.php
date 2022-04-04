@@ -6,8 +6,6 @@ if (!defined('IN_DISCUZ')) {
     exit('Access Denied');
 }
 
-include_once template('codfrm_markdown:module');
-
 class plugin_codfrm_markdown
 {
 
@@ -35,6 +33,8 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
 
     public function post_middle()
     {
+        include_once template('codfrm_markdown:module');
+
         // 判断编辑还是新增
         if ($_GET['action'] === 'edit' && $_GET['tid']) {
             $message = C::t('forum_post')->fetch('tid:' . $_GET['tid'], $_GET['pid'], true)['message'];
@@ -52,7 +52,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
     function viewthread_title_extra()
     {
         global $_G;
-        return "<script src=\"{$_G['siteurl']}source/plugin/codfrm_markdown/dist/css.js\"></script>";
+        return "<script src=\"{$_G['siteurl']}source/plugin/codfrm_markdown/dist/viewer.js\"></script>";
     }
 
     function viewthread_posttop_output()
@@ -71,9 +71,35 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
 
             if (substr($message, 0, 4) === '[md]') {
                 // 处理markdown
-                $postlist[$k]['message'] = "<div class=\"markdown-body\">" . $Parsedown->text($this->parseMarkdown($message)) . "</div>";
+                $Parsedown->setImagecallback(function ($img) use ($k, &$postlist) {
+                    foreach ($postlist[$k]['attachments'] as $k2 => $v) {
+                        if (strpos($img['element']['attributes']['src'], $v['attachment']) !== false) {
+                            unset($postlist[$k]['attachments'][$k2]);
+                        }
+                    }
+                });
+                $postlist[$k]['message'] = "<div class=\"markdown-body\">" .
+                    $Parsedown->text($this->parseMarkdown($message)) . "</div>";
             }
         }
     }
 
+}
+
+class mobileplugin_codfrm_markdown
+{
+
+}
+
+class mobileplugin_codfrm_markdown_forum extends plugin_codfrm_markdown_forum
+{
+    public function viewthread_title_mobile_extra()
+    {
+        return parent::viewthread_title_extra();
+    }
+
+    public function viewthread_bottom_mobile_output()
+    {
+       return parent::viewthread_posttop_output();
+    }
 }

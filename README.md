@@ -8,3 +8,10 @@
 ```php
 $_config['plugindeveloper'] = 2;
 ```
+
+## 感谢以下项目
+
+* tui.editor
+* github-markdown-css
+* prismjs
+* erusev/parsedown
