@@ -21,7 +21,6 @@ window.initeditor = function (editor) {
     }
     let html = mdDiv.innerText;
     mdDiv.innerText = '';
-    console.log(html);
     const md = new Editor({
         el: mdDiv,
         initialValue: html,

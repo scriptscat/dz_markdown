@@ -42,7 +42,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
                 return tpl_post_attribute_extra_body();
             }
             if (substr($message, 0, 4) === '[md]') {
-                return tpl_post_attribute_extra_body('md', $this->parseMarkdown($message));
+                return tpl_post_attribute_extra_body('md', htmlspecialchars($this->parseMarkdown($message)));
             }
             return tpl_post_attribute_extra_body('dz');
         }
