@@ -1,6 +1,8 @@
 <?php
 
+
 use Codfrm\DzMarkdown\ParsedownExt;
+use Michelf\MarkdownExtra;
 
 if (!defined('IN_DISCUZ')) {
     exit('Access Denied');
@@ -100,6 +102,6 @@ class mobileplugin_codfrm_markdown_forum extends plugin_codfrm_markdown_forum
 
     public function viewthread_bottom_mobile_output()
     {
-       return parent::viewthread_posttop_output();
+        return parent::viewthread_posttop_output();
     }
 }
