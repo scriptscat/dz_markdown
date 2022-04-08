@@ -1,19 +1,21 @@
 {
-    "name": "codfrm/dz_markdown",
-    "description": "油猴中文网用markdown编辑器插件",
-    "license": "GPL-3",
-    "autoload": {
-        "psr-4": {
-            "Codfrm\\DzMarkdown\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "王一之",
-            "email": "yz@ggnb.top"
-        }
-    ],
-    "require": {
-        "erusev/parsedown": "^1.7"
+  "name": "codfrm/dz_markdown",
+  "description": "油猴中文网用markdown编辑器插件",
+  "license": "GPL-3",
+  "autoload": {
+    "psr-4": {
+      "Codfrm\\DzMarkdown\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "王一之",
+      "email": "yz@ggnb.top"
+    }
+  ],
+  "require": {
+    "erusev/parsedown": "^1.7",
+    "erusev/parsedown-extra": "^0.8.1",
+    "ext-mbstring": "*"
+  }
 }

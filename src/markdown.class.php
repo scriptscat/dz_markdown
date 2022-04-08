@@ -59,10 +59,10 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
     {
         global $postlist;
         require_once 'vendor/erusev/parsedown/Parsedown.php';
+        require_once 'vendor/erusev/parsedown-extra/ParsedownExtra.php';
         require_once 'src/ParsedownExt.php';
         $Parsedown = new ParsedownExt();
-        $Parsedown->setSafeMode(true)
-            ->setMarkupEscaped(true);
+        $Parsedown->setSafeMode(true);
         foreach ($postlist as $k => $post) {
             $message = C::t('forum_post')->fetch('tid:' . $post['tid'], $post['pid'], true)['message'];
             if (strlen($message) < 9) {

@@ -1,0 +1,19 @@
+.markdown-body ul li, .markdown-body ul {
+    list-style: disc !important;
+}
+
+.markdown-body ul li li{
+    list-style: circle !important;
+}
+
+.markdown-body ul {
+    margin-left: 0;
+}
+
+.markdown-body ol li, .markdown-body ol {
+    list-style: auto !important;
+}
+
+.markdown-body ul, .markdown-body ol {
+    padding-left: 0 !important;
+}
