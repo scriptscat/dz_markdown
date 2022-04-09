@@ -10,7 +10,8 @@ class ParsedownExt extends ParsedownExtra
 {
     public function __construct()
     {
-        array_unshift($this->BlockTypes['<'], 'HtmlTag');
+//        array_unshift($this->BlockTypes['<'], 'HtmlTag');
+//        array_unshift($this->voidElements,'div');
     }
 
     public function inlineUrl($Excerpt)
@@ -77,92 +78,54 @@ class ParsedownExt extends ParsedownExtra
         return '<input type="checkbox" disabled ' . ($text['checked'] ? 'checked' : '') . ' /> ' . $text['text'];
     }
 
-    // 简单写了,支持div和h1-h6标签的属性,有需要再看看
-    public function blockHtmlTag($Line)
+
+    protected $openTagNum = [];
+
+    protected $htmlTag = '/<(div|h[1-6]|font)(.*?)>/';
+    protected $endHtmlTag = '/<\/(div|h[1-6]|font)>/';
+    protected $allowAttr = '/(align|color)\s*=\s*"(\w+?)"/';
+
+    public function line($text, $nonNestables = array())
     {
-        switch ($Line['body']) {
-            case '</div>':
-            case '</h1>':
-            case '</h2>':
-            case '</h3>':
-            case '</h4>':
-            case '</h5>':
-            case '</h6>':
-            case '</font>':
-                return [
-                    'handler' => 'echoHtml',
-                    'markup' => $Line['body'],
-                    'text' => $Line['body']
-                ];
-        }
-        // 支持div和h1-h6
-        $endTag = '';// 结束的tag,用来判断是否不html编码
-        $tag = mb_substr($Line['body'], 0, 5);
-        if ($tag !== '<div ') {
-            $tag = mb_substr($Line['body'], 0, 4);
-            switch ($tag) {
-                case '<h1 ':
-                case '<h2 ':
-                case '<h3 ':
-                case '<h4 ':
-                case '<h5 ':
-                case '<h6 ':
-                    $endTag = mb_substr($Line['body'], mb_strlen($Line['body']) - 5);
-                    switch ($endTag) {
-                        case '</h1>':
-                        case '</h2>':
-                        case '</h3>':
-                        case '</h4>':
-                        case '</h5>':
-                        case '</h6>':
-                            break;
-                        default:
-                            $endTag = '';
-                    }
-                    break;
-                default:
-                    $tag = mb_substr($Line['body'], 0, 6);
-                    if ($tag !== '<font ') {
-                        return;
-                    } else {
-                        $endTag = mb_substr($Line['body'], mb_strlen($Line['body']) - 7);
-                        if ($endTag !== '</font>') {
-                            $endTag = '';
-                        }
-                    }
+        // 对html标签 div/h1-6 进行处理
+        if (preg_match($this->htmlTag, $text, $match, PREG_OFFSET_CAPTURE)) {
+            // 处理open tag
+            // 替换掉html标签
+            preg_match_all($this->allowAttr, $match[0][0], $attrMatches, PREG_SET_ORDER);
+            $ret = "<{$match[1][0]} ";
+            $this->openTagNum[$match[1][0]]++;
+            foreach ($attrMatches as $k => $attrMatch) {
+                $ret .= "{$attrMatch[1]}=\"{$attrMatch[2]}\"";
             }
-        } else {
-            $endTag = mb_substr($Line['body'], mb_strlen($Line['body']) - 6);
-            if ($endTag !== '</div>') {
-                $endTag = '';
+            $ret = rtrim($ret);
+            $ret .= ">" . $this->line(substr($text, $match[0][1] + strlen($match[0][0])), $nonNestables);
+            return $this->line(substr($text, 0, $match[0][1])) . $ret;
+        } else if (preg_match($this->endHtmlTag, $text, $match, PREG_OFFSET_CAPTURE)) {
+            // 处理close tag
+            if (!$this->openTagNum[$match[1][0]]) {
+                // 不存在opentag,直接返回空
+                return '';
             }
+            // 存在减去并处理
+            $this->openTagNum[$match[1][0]]--;
+            $ret = "</{$match[1][0]}>";
+            $ret .= $this->line(substr($text, $match[0][1] + strlen($match[0][0])), $nonNestables);
+            return $this->line(substr($text, 0, $match[0][1])) . $ret;
         }
-        $start = mb_strpos($Line['body'], '>');
-        if ($start === false) {
-            return;
-        }
-        // 取出align和color
-        preg_match_all('/([a-z]+?)="([a-z]+?)"/', $Line['body'], $matches, PREG_SET_ORDER);
-        $attr = '';
-        foreach ($matches as $k => $v) {
-            switch ($v[1]) {
-                case 'align':
-                case 'color':
-                    $attr .= $v[1] . '="' . parent::escape($v[2]) . '" ';
-            }
-        }
-        return [
-            'element' => [
-                'name' => 'h',
-                'handler' => 'echoHtml',
-                'text' => $tag . $attr . '>' . parent::escape(mb_substr($Line['body'],
-                        $start + 1, mb_strlen($Line['body']) - mb_strlen($endTag) - $start - 1)) . $endTag
-            ],
-        ];
+        $ret = parent::line($text, $nonNestables); // TODO: Change the autogenerated stub
+        // 处理\n换行
+        return str_replace("\n", "<br />", $ret);
     }
 
-    public function echoHtml($text)
+    public function text($text)
     {
-        return $text;
+        $this->openTagNum = [];
+        $ret = parent::text($text); // TODO: Change the autogenerated stub
+        // 闭合标签
+        foreach ($this->openTagNum as $k => $v) {
+            $ret .= "</{$k}>";
+        }
+        return $ret;
     }
+
 }
