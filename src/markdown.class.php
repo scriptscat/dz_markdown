@@ -43,8 +43,20 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
             if (strlen($message) < 9) {
                 return tpl_post_attribute_extra_body();
             }
+            $prefix = '';
+            $mdpos = strpos($message, '[md]');
+            if ($mdpos === false) {
+                return tpl_post_attribute_extra_body();
+            }
+            // 处理"本帖最后由"前缀
+            if (strpos($message, '[i=s] 本帖最后由') === 0) {
+                $prefix = '> ' . substr($message, 6, strpos($message, '[/i]') - 6) . "\n\n";
+                $message = substr($message, $mdpos);
+            } else if ($mdpos !== 0) {
+                return tpl_post_attribute_extra_body();
+            }
             if (substr($message, 0, 4) === '[md]') {
-                return tpl_post_attribute_extra_body('md', htmlspecialchars($this->parseMarkdown($message)));
+                return tpl_post_attribute_extra_body('md', htmlspecialchars($prefix . $this->parseMarkdown($message)));
             }
             return tpl_post_attribute_extra_body('dz');
         }
@@ -70,7 +82,18 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
             if (strlen($message) < 9) {
                 continue;
             }
-
+            $prefix = '';
+            $mdpos = strpos($message, '[md]');
+            if ($mdpos === false) {
+                continue;
+            }
+            // 处理"本帖最后由"前缀
+            if (strpos($message, '[i=s] 本帖最后由') === 0) {
+                $prefix = '> ' . substr($message, 6, strpos($message, '[/i]') - 6) . "\n\n";
+                $message = substr($message, $mdpos);
+            } else if ($mdpos !== 0) {
+                continue;
+            }
             if (substr($message, 0, 4) === '[md]') {
                 // 处理markdown
                 $Parsedown->setImagecallback(function ($img) use ($k, &$postlist) {
@@ -81,7 +104,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
                     }
                 });
                 $postlist[$k]['message'] = "<div class=\"markdown-body\">" .
-                    $Parsedown->text($this->parseMarkdown($message)) . "</div>";
+                    $Parsedown->text($prefix . $this->parseMarkdown($message)) . "</div>";
             }
         }
     }
