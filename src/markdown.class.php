@@ -46,14 +46,17 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
             $prefix = '';
             $mdpos = strpos($message, '[md]');
             if ($mdpos === false) {
-                return tpl_post_attribute_extra_body();
+                return tpl_post_attribute_extra_body('dz');
             }
             // 处理"本帖最后由"前缀
             if (strpos($message, '[i=s] 本帖最后由') === 0) {
                 $prefix = '> ' . substr($message, 6, strpos($message, '[/i]') - 6) . "\n\n";
                 $message = substr($message, $mdpos);
-            } else if ($mdpos !== 0) {
-                return tpl_post_attribute_extra_body();
+            } else if (strpos($message, '[quote]') === 0 &&
+                preg_match('/url=(.*?)\].*?#999999\](.*?)\[.*?\[\/size\]\s*(.*?)\[\/quote\]/',
+                    $message, $matche)) {
+                $prefix = "> [{$matche[2]}]({$matche[1]})\n> > $matche[3]" . "\n\n";
+                $message = substr($message, $mdpos);
             }
             if (substr($message, 0, 4) === '[md]') {
                 return tpl_post_attribute_extra_body('md', htmlspecialchars($prefix . $this->parseMarkdown($message)));
@@ -88,11 +91,15 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
                 continue;
             }
             // 处理"本帖最后由"前缀
+            // 处理"回复"前缀
             if (strpos($message, '[i=s] 本帖最后由') === 0) {
                 $prefix = '> ' . substr($message, 6, strpos($message, '[/i]') - 6) . "\n\n";
                 $message = substr($message, $mdpos);
-            } else if ($mdpos !== 0) {
-                continue;
+            } else if (strpos($message, '[quote]') === 0 &&
+                preg_match('/url=(.*?)\].*?#999999\](.*?)\[.*?\[\/size\]\s*(.*?)\[\/quote\]/',
+                    $message, $matche)) {
+                $prefix = "> [{$matche[2]}]({$matche[1]})\n> > $matche[3]" . "\n\n";
+                $message = substr($message, $mdpos);
             }
             if (substr($message, 0, 4) === '[md]') {
                 // 处理markdown
