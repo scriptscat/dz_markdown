@@ -4,9 +4,10 @@ global $_G;
 }
 <!--{block return}-->
     <script src="{$_G['siteurl']}source/plugin/codfrm_markdown/dist/editor.js"></script>
-
-<div id="mk-editor">{$content}</div>
-
+<div id="md">
+    <div id="md-editor">{$content}</div>
+    <span id="md-autosave"></span>
+</div>
 <!--{if $editor=='md'}-->
     <a id="switch-editor" href="#">使用默认编辑器</a>
 <!--{else}-->
@@ -15,7 +16,7 @@ global $_G;
 
 
     <script>
-        initeditor("{$editor}");
+        initeditor("{$_GET['tid']}","{$editor}");
     </script>
 
 <!--{/block}-->

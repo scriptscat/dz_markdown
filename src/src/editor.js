@@ -8,21 +8,26 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 import Prism from 'prismjs';
 import "./prismjs";
 
-window.initeditor = function (editor) {
-    let mdDiv = document.querySelector('#mk-editor');
+window.initeditor = function (postid, editor) {
+    let mdDiv = document.querySelector('#md');
     if (!mdDiv) {
         return;
     }
+    let mdEditor = document.querySelector('#md-editor');
+    let saveEl = document.querySelector('#md-autosave');
     let dzDiv = document.querySelector('.edt');
     if (editor !== 'md') {
         mdDiv.style.display = 'none';
     } else {
         dzDiv.style.setProperty('display', 'none', 'important');
     }
-    let html = mdDiv.innerText;
-    mdDiv.innerText = '';
+    let html = mdEditor.innerText;
+    mdEditor.innerText = '';
+    if (localStorage['md-autosave-' + postid]) {
+        html = localStorage['md-autosave-' + postid];
+    }
     const md = new Editor({
-        el: mdDiv,
+        el: mdEditor,
         initialValue: html,
         height: '500px',
         initialEditType: 'markdown',
@@ -40,7 +45,10 @@ window.initeditor = function (editor) {
         autofocus: false,
         language: 'zh-CN',
     });
-
+    setInterval(() => {
+        localStorage['md-autosave-' + postid] = md.getMarkdown();
+        saveEl.innerHTML = "已自动保存 " + new Date().toLocaleTimeString();
+    }, 10000);
     document.querySelector('#switch-editor').onclick = function () {
         if (editor === 'md') {
             this.innerHTML = '使用狂炫酷爆吊炸天的markdown编辑器';
@@ -55,7 +63,10 @@ window.initeditor = function (editor) {
         }
         return false;
     }
-
+    document.querySelector('#postform').addEventListener("submit", function () {
+        localStorage.removeItem('md-autosave-' + postid);
+        return true;
+    });
     // hook getEditorContents 方法
     let getEditorContents = window.getEditorContents;
     window.getEditorContents = function () {
@@ -93,6 +104,7 @@ function uploadImage(blob) {
                 let resps = xhr.responseText.split("|");
                 let atta = document.createElement('input');
                 atta.name = 'attachnew[' + resps[3] + ']';
+                atta.style.display = 'none';
                 document.querySelector('#postbox').append(atta);
                 resolve(
                     "data/attachment/forum/" + resps[5]

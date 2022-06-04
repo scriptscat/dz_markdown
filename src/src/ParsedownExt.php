@@ -81,7 +81,7 @@ class ParsedownExt extends ParsedownExtra
 
     protected $htmlTag = '/<(div|h[1-6]|font)(.*?)>/';
     protected $endHtmlTag = '/<\/(div|h[1-6]|font)>/';
-    protected $allowAttr = '/(align|color)\s*=\s*"(\w+?)"/';
+    protected $allowAttr = '/(align|color)\s*=\s*"([#:\w]+?)"/';
 
     public function line($text, $nonNestables = array(), &$openTagNum = [], $main = true)
     {
