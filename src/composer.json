@@ -16,6 +16,7 @@
   "require": {
     "erusev/parsedown": "^1.7",
     "erusev/parsedown-extra": "^0.8.1",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "ext-json": "*"
   }
 }

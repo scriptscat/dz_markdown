@@ -2,7 +2,7 @@
     list-style: disc !important;
 }
 
-.markdown-body ul li li{
+.markdown-body ul li li {
     list-style: circle !important;
 }
 
@@ -16,4 +16,52 @@
 
 .markdown-body ul, .markdown-body ol {
     padding-left: 0 !important;
+}
+
+.emoji, .emoji-img {
+    display: inline;
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+    cursor: pointer;
+    vertical-align: top;
+}
+
+.emoji:hover {
+    background: azure;
+}
+
+.emoji-del {
+    display: none;
+}
+
+.emoji-img:hover .emoji-del {
+    display: block;
+    position: relative;
+    top: -80px;
+    right: -60px;
+    width: 20px;
+    height: 20px;
+    background: #f00;
+    border-radius: 100%;
+    font-size: 8px;
+    color: #fff;
+}
+
+.un-del:hover, .un-del:hover img {
+    height: 88px;
+    width: 88px;
+}
+
+.emoji-img {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    padding: 4px;
+}
+
+.emoji-img img {
+    width: 80px;
+    height: 80px;
 }
