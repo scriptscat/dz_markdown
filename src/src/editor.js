@@ -198,7 +198,7 @@ function showEmoji() {
             const el = e.target.parentElement.firstChild;
             fetch('/plugin.php?id=codfrm_markdown:emoji&op=del', {
                 method: "POST",
-                body: 'url=' + el.getAttribute('src'),
+                body: 'url=' + encodeURIComponent(el.getAttribute('src')),
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
@@ -224,7 +224,7 @@ function showEmoji() {
                 if (img) {
                     fetch('/plugin.php?id=codfrm_markdown:emoji&op=add', {
                         method: 'POST',
-                        body: 'url=' + img,
+                        body: 'url=' + encodeURIComponent(img),
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         }
