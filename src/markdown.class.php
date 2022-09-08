@@ -28,9 +28,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
         $message = preg_replace("/\[url.*?\](.*?)\[\/url\]/", "$1", $message);
         $message = preg_replace("/\[video.*?\](.*?)\[\/video\]/", "$1", $message);
         $message = preg_replace("/\[flash.*?\](.*?)\[\/flash\]/", "$1", $message);
-        $message = preg_replace("/\[media.*?\](.*?)\[\/media\]/", "$1", $message);
-
-        return $message;
+        return preg_replace("/\[media.*?\](.*?)\[\/media\]/", "$1", $message);
     }
 
     public function post_middle()
@@ -43,23 +41,13 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
             if (strlen($message) < 9) {
                 return tpl_post_attribute_extra_body();
             }
-            $prefix = '';
             $mdpos = strpos($message, '[md]');
             if ($mdpos === false) {
                 return tpl_post_attribute_extra_body('dz');
             }
-            // 处理"本帖最后由"前缀
-            if (strpos($message, '[i=s] 本帖最后由') === 0) {
-                $prefix = '> ' . substr($message, 6, strpos($message, '[/i]') - 6) . "\n\n";
-                $message = substr($message, $mdpos);
-            } else if (strpos($message, '[quote]') === 0 &&
-                preg_match('/url=(.*?)\].*?#999999\](.*?)\[.*?\[\/size\]\s*(.*?)\[\/quote\]/',
-                    $message, $matche)) {
-                $prefix = "> [{$matche[2]}]({$matche[1]})\n> > $matche[3]" . "\n\n";
-                $message = substr($message, $mdpos);
-            }
-            if (substr($message, 0, 4) === '[md]') {
-                return tpl_post_attribute_extra_body('md', htmlspecialchars($prefix . $this->parseMarkdown($message)));
+            $message = $this->dealPrefix($message, $mdpos);
+            if (substr($message[1], 0, 4) === '[md]') {
+                return tpl_post_attribute_extra_body('md', htmlspecialchars($message[0] . $this->parseMarkdown($message[1])));
             }
             return tpl_post_attribute_extra_body('dz');
         }
@@ -70,6 +58,30 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
     {
         global $_G;
         return "<script src=\"{$_G['siteurl']}source/plugin/codfrm_markdown/dist/viewer.js\"></script>";
+    }
+
+    function dealPrefix($message, $mdpos)
+    {
+//        var_dump($message);
+        // 处理"本帖最后由"前缀
+        $prefix = '';
+        if (strpos($message, '[i=s] 本帖最后由') === 0) {
+            $prefix = '> ' . substr($message, 6, strpos($message, '[/i]') - 6) . "\n\n";
+            $message = substr($message, $mdpos);
+        } else if (strpos($message, '[quote]') === 0 &&
+            preg_match('/url=(.*?)\].*?#999999\](.*?)\[.*?\[\/size\]\s*([\s\S]*?)\[\/quote\]/',
+                $message, $matche)) {
+            $prefix = "> [{$matche[2]}]({$matche[1]})\n> > $matche[3]" . "\n\n";
+            // 取[quote]后面的[md]内容
+            $pos = strpos($message, '[/quote]');
+            $mdpos = strpos($message, '[md]', $pos);
+            if ($mdpos === false) {
+                $message = substr($message, $pos + 8);
+            } else {
+                $message = substr($message, $mdpos);
+            }
+        }
+        return [$prefix, $message];
     }
 
     function viewthread_posttop_output()
@@ -85,23 +97,12 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
             if (strlen($message) < 9) {
                 continue;
             }
-            $prefix = '';
             $mdpos = strpos($message, '[md]');
             if ($mdpos === false) {
                 continue;
             }
-            // 处理"本帖最后由"前缀
-            // 处理"回复"前缀
-            if (strpos($message, '[i=s] 本帖最后由') === 0) {
-                $prefix = '> ' . substr($message, 6, strpos($message, '[/i]') - 6) . "\n\n";
-                $message = substr($message, $mdpos);
-            } else if (strpos($message, '[quote]') === 0 &&
-                preg_match('/url=(.*?)\].*?#999999\](.*?)\[.*?\[\/size\]\s*(.*?)\[\/quote\]/',
-                    $message, $matche)) {
-                $prefix = "> [{$matche[2]}]({$matche[1]})\n> > $matche[3]" . "\n\n";
-                $message = substr($message, $mdpos);
-            }
-            if (substr($message, 0, 4) === '[md]') {
+            $message = $this->dealPrefix($message, $mdpos);
+            if (substr($message[1], 0, 4) === '[md]') {
                 // 处理markdown
                 $Parsedown->setImagecallback(function ($img) use ($k, &$postlist) {
                     foreach ($postlist[$k]['attachments'] as $k2 => $v) {
@@ -111,7 +112,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
                     }
                 });
                 $postlist[$k]['message'] = "<div class=\"markdown-body\">" .
-                    $Parsedown->text($prefix . $this->parseMarkdown($message)) . "</div>";
+                    $Parsedown->text($message[0] . $this->parseMarkdown($message[1])) . "</div>";
             }
         }
     }
