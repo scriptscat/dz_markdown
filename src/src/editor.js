@@ -23,6 +23,7 @@ window.initeditor = function (postid, editor) {
         dzDiv.style.setProperty('display', 'none', 'important');
     }
     let html = mdEditor.innerText;
+    let origin = html;
     mdEditor.innerText = '';
     if (localStorage['md-autosave-' + postid]) {
         html = localStorage['md-autosave-' + postid];
@@ -74,6 +75,10 @@ window.initeditor = function (postid, editor) {
         language: 'zh-CN',
     });
     emoji.setMd(md);
+    document.querySelector("#recover-text").onclick = () => {
+        md.setMarkdown(origin);
+        return false;
+    }
     setInterval(() => {
         localStorage['md-autosave-' + postid] = md.getMarkdown();
         saveEl.innerHTML = "已自动保存 " + new Date().toLocaleTimeString();

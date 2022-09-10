@@ -47,11 +47,21 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
             }
             $message = $this->dealPrefix($message, $mdpos);
             if (substr($message[1], 0, 4) === '[md]') {
-                return tpl_post_attribute_extra_body('md', htmlspecialchars($message[0] . $this->parseMarkdown($message[1])));
+                return tpl_post_attribute_extra_body('md', $this->dealHTML(htmlspecialchars($message[0] . $this->parseMarkdown($message[1]))));
             }
             return tpl_post_attribute_extra_body('dz');
         }
         return tpl_post_attribute_extra_body();
+    }
+
+    // 过滤xss
+    function dealHTML($html)
+    {
+        require_once "vendor/autoload.php";
+        $config = \HTMLPurifier_HTML5Config::createDefault();
+        $config->set('HTML.TargetBlank', true);
+        $purifier = new \HTMLPurifier($config);
+        return $purifier->purify($html);
     }
 
     function viewthread_title_extra()
@@ -91,7 +101,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
         require_once 'vendor/erusev/parsedown-extra/ParsedownExtra.php';
         require_once 'src/ParsedownExt.php';
         $Parsedown = new ParsedownExt();
-        $Parsedown->setSafeMode(true);
+        $Parsedown->setSafeMode(false);
         foreach ($postlist as $k => $post) {
             $message = C::t('forum_post')->fetch('tid:' . $post['tid'], $post['pid'], true)['message'];
             if (strlen($message) < 9) {
@@ -112,7 +122,8 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
                     }
                 });
                 $postlist[$k]['message'] = "<div class=\"markdown-body\">" .
-                    $Parsedown->text($message[0] . $this->parseMarkdown($message[1])) . "</div>";
+                    $this->dealHTML($Parsedown->text($message[0] . $this->parseMarkdown($message[1])))
+                    . "</div>";
             }
         }
     }
