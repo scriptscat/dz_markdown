@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03211287108360f5a6394d7787a322c6",
+    "content-hash": "0156677a44e149c945ce797b2ca4a72c",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -160,26 +160,31 @@
         },
         {
             "name": "xemlock/htmlpurifier-html5",
-            "version": "v0.1.11",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/xemlock/htmlpurifier-html5.git",
-                "reference": "f0d563f9fd4a82a3d759043483f9a94c0d8c2255"
+                "reference": "14c94008353ed15fb3443107ca5dbf09f64a4b92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/xemlock/htmlpurifier-html5/zipball/f0d563f9fd4a82a3d759043483f9a94c0d8c2255",
-                "reference": "f0d563f9fd4a82a3d759043483f9a94c0d8c2255",
+                "url": "https://api.github.com/repos/xemlock/htmlpurifier-html5/zipball/14c94008353ed15fb3443107ca5dbf09f64a4b92",
+                "reference": "14c94008353ed15fb3443107ca5dbf09f64a4b92",
                 "shasum": ""
             },
             "require": {
                 "ezyang/htmlpurifier": "^4.8",
-                "php": ">=5.2"
+                "php": ">=5.3"
             },
             "require-dev": {
+                "masterminds/html5": "^2.7",
                 "php-coveralls/php-coveralls": "^1.1|^2.1",
-                "phpunit/phpunit": ">=4.7 <8.0"
+                "phpunit/phpunit": ">=4.7"
             },
+            "suggest": {
+                "masterminds/html5": "Required to use HTMLPurifier_Lexer_HTML5"
+            },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -196,7 +201,8 @@
                     "email": "xemlock@gmail.com"
                 }
             ],
-            "description": "HTML5 element definitions for HTML Purifier",
+            "description": "HTML5 support for HTML Purifier",
+            "homepage": "https://github.com/xemlock/htmlpurifier-html5",
             "keywords": [
                 "HTML5",
                 "Purifier",
@@ -211,12 +217,12 @@
                 "issues": "https://github.com/xemlock/htmlpurifier-html5/issues",
                 "source": "https://github.com/xemlock/htmlpurifier-html5/tree/master"
             },
-            "time": "2019-08-07T17:19:21+00:00"
+            "time": "2022-08-16T10:33:47+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,

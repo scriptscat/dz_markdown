@@ -60,8 +60,12 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
         require_once "vendor/autoload.php";
         $config = \HTMLPurifier_HTML5Config::createDefault();
         $config->set('HTML.TargetBlank', true);
+        $config->set('HTML.Forms', true);
+        $config->set("Attr.AllowedInputTypes", array('checkbox'));
         $purifier = new \HTMLPurifier($config);
-        return $purifier->purify($html);
+        $re = $purifier->purify($html);
+        print_r($re);
+        return $re;
     }
 
     function viewthread_title_extra()

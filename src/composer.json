@@ -19,6 +19,7 @@
     "ext-mbstring": "*",
     "ext-json": "*",
     "ezyang/htmlpurifier": "^4.14",
-    "xemlock/htmlpurifier-html5": "^0.1.11"
-  }
+    "xemlock/htmlpurifier-html5": "master"
+  },
+  "minimum-stability": "dev"
 }
