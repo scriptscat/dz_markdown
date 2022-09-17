@@ -63,9 +63,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
         $config->set('HTML.Forms', true);
         $config->set("Attr.AllowedInputTypes", array('checkbox'));
         $purifier = new \HTMLPurifier($config);
-        $re = $purifier->purify($html);
-        print_r($re);
-        return $re;
+        return $purifier->purify($html);
     }
 
     function viewthread_title_extra()
@@ -125,6 +123,15 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
                         }
                     }
                 });
+                // 正则匹配img标签进行处理
+                preg_match_all('/<img[\s\S]*?src=["\'](.*?)[\'"][\s\S]*?>/', $message[1], $matches);
+                foreach ($matches[1] as $url) {
+                    foreach ($postlist[$k]['attachments'] as $k2 => $v) {
+                        if (strpos($url, $v['attachment']) !== false) {
+                            unset($postlist[$k]['attachments'][$k2]);
+                        }
+                    }
+                }
                 $postlist[$k]['message'] = "<div class=\"markdown-body\">" .
                     $this->dealHTML($Parsedown->text($message[0] . $this->parseMarkdown($message[1])))
                     . "</div>";
