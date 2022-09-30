@@ -49,7 +49,7 @@
     color: #fff;
 }
 
-#recover-text{
+#recover-text {
 
 }
 
@@ -68,4 +68,30 @@
 .emoji-img img {
     width: 80px;
     height: 80px;
+}
+
+.add-emoji {
+    box-shadow: inset 0px 1px 0px 0px #ffffff;
+    background: #ededed linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+    border-radius: 6px;
+    border: 1px solid #dcdcdc;
+    display: inline-block;
+    cursor: pointer;
+    color: #777777;
+    font-family: Arial;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 3px 9px;
+    height: 20px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #ffffff;
+}
+
+.add-emoji:hover {
+    background: #dfdfdf linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
+}
+
+.add-emoji:active {
+    position: relative;
+    top: 1px;
 }

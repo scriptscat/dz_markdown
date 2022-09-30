@@ -39,6 +39,19 @@ window.initeditor = function (postid, editor) {
         return button;
     }
 
+    function helpBtn() {
+        const button = document.createElement('button');
+        button.className = 'toastui-editor-toolbar-icons last';
+        button.style.backgroundImage = 'none';
+        button.style.margin = '0';
+        button.innerHTML = `<i>❓</i>`;
+        button.type = "button";
+        button.onclick = () => {
+            window.open("https://bbs.tampermonkey.net.cn/thread-3311-1-1.html", "_blank");
+        }
+        return button;
+    }
+
     const emoji = showEmoji();
 
     const md = new Editor({
@@ -60,7 +73,11 @@ window.initeditor = function (postid, editor) {
             ['hr', 'quote'],
             ['ul', 'ol', 'task', 'indent', 'outdent'],
             ['table', 'image', 'link'],
-            ['code', 'codeblock']],
+            ['code', 'codeblock'], [{
+                el: helpBtn(),
+                command: 'help',
+                tooltip: '帮助',
+            }]],
         hooks: {
             addImageBlobHook: async (blob, callback) => {
                 const uploadedImageURL = await uploadImage(blob);

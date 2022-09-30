@@ -132,7 +132,9 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
                         }
                     }
                 }
-                $postlist[$k]['message'] = "<div class=\"markdown-body\">" .
+                $postlist[$k]['message'] = "<div class=\"markdown-body\" data-prismjs-copy=\"copy\"
+	data-prismjs-copy-error=\"复制错误，请手动处理\"
+	data-prismjs-copy-success=\"copy suucess\">" .
                     $this->dealHTML($Parsedown->text($message[0] . $this->parseMarkdown($message[1])))
                     . "</div>";
             }
