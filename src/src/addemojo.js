@@ -13,7 +13,7 @@ window.addEventListener("load", () => {
             }
             if (evt.target.tagName === "IMG") {
                 div_wrap = document.createElement("div");
-                div_wrap.className = 'add-emoji'
+                div_wrap.className = 'add-emoji-back'
                 div_wrap.addEventListener('mouseleave', (evt) => {
                     if (div_wrap) {
                         div_wrap.remove()
