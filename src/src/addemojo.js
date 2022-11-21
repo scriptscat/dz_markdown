@@ -1,6 +1,6 @@
 // 显示添加表情包按钮
 
-window.addEventListener("load", () => {
+window.addEventListener("DOMContentLoaded", () => {
     let mk_bodys = document.querySelectorAll('.markdown-body')
     mk_bodys.forEach(mk_body => {
         let div_wrap = undefined
