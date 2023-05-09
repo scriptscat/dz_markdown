@@ -110,3 +110,7 @@
     display: block;
     margin: 10px 0;
 }
+
+.markdown-body .md-img{
+    cursor: pointer;
+}

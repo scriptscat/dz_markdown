@@ -124,7 +124,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
                     }
                 });
                 // 正则匹配img标签进行处理
-/*                preg_match_all('/<img[\s\S]*?src=["\'](.*?)[\'"][\s\S]*?>/', $message[1], $matches);*/
+                /*                preg_match_all('/<img[\s\S]*?src=["\'](.*?)[\'"][\s\S]*?>/', $message[1], $matches);*/
 //                foreach ($matches[1] as $url) {
 //                    foreach ($postlist[$k]['attachments'] as $k2 => $v) {
 //                        if (strpos($url, $v['attachment']) !== false) {
@@ -133,7 +133,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
 //                    }
 //                }
                 // 如果是markdown移除全部附件图片
-                $postlist[$k]['attachments']=[];
+                $postlist[$k]['attachments'] = [];
                 $postlist[$k]['message'] = "<div class=\"markdown-body\" data-prismjs-copy=\"copy\"
 	data-prismjs-copy-error=\"复制错误，请手动处理\"
 	data-prismjs-copy-success=\"copy suucess\">" .
@@ -142,11 +142,6 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
             }
         }
     }
-
-}
-
-class mobileplugin_codfrm_markdown
-{
 
 }
 

@@ -33,8 +33,11 @@ class ParsedownExt extends ParsedownExtra
     protected function inlineImage($Excerpt)
     {
         $ret = parent::inlineImage($Excerpt);
-        if ($ret && $this->callback) {
-            call_user_func($this->callback, $ret);
+        if ($ret) {
+            $ret['element']['attributes']['class'] = 'md-img';
+            if ($this->callback) {
+                call_user_func($this->callback, $ret);
+            }
         }
         return $ret;
     }
@@ -77,7 +80,6 @@ class ParsedownExt extends ParsedownExtra
     {
         return '<input type="checkbox" disabled ' . ($text['checked'] ? 'checked' : '') . ' /> ' . $text['text'];
     }
-
 
     protected $htmlTag = '/<(div|h[1-6]|font)(.*?)>/';
     protected $endHtmlTag = '/<\/(div|h[1-6]|font)>/';
