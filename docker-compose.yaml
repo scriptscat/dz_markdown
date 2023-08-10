@@ -17,7 +17,7 @@ services:
     ports:
       - "80:80"
     volumes:
-    - ./app.conf:/etc/nginx/conf.d/default.conf
+    - ./app.conf:/etc/nginx/http.d/default.conf
     - ./runtime/config:/var/www/html/config
     - ./src:/var/www/html/source/plugin/codfrm_markdown
     links:

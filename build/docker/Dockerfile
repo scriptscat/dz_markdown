@@ -1,4 +1,4 @@
-FROM php:7.4-fpm-alpine3.12
+FROM php:7.4-fpm-alpine3.16
 
 WORKDIR /root
 
@@ -12,7 +12,8 @@ RUN apk update && \
     chmod 755 docker-entrypoint.sh && \
     docker-php-ext-install mysqli
 
-ENV DZ_URL https://dznet.dismall.com/down/Discuz_X3.5_SC_UTF8_20221221.zip
+ENV DZ_URL https://gitee.com/Discuz/DiscuzX/attach_files/1477547/download
+
 ENV DZ_WWW_ROOT /var/www/html
 
 ADD ${DZ_URL} /tmp/discuz.zip

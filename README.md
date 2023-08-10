@@ -3,7 +3,26 @@
 
 油猴中文网用markdown插件
 
+## 安装
+
+需要使用yarn和composer安装依赖包
+
+```
+cd src
+yarn
+composer installl
+```
+
+然后将src下文件粘贴到`/plugin/codfrm_markdown`中
+
 ## 开发配置
+
+为了方便开发调试，可以使用docker启动
+
+```bash
+docker-compose up -d
+```
+
 启动docker后,在runtime/config/config_global.php文件后加入
 ```php
 $_config['plugindeveloper'] = 2;

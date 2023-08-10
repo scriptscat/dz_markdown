@@ -317,7 +317,7 @@ function uploadImage(blob) {
                 }
                 let resps = xhr.responseText.split("|");
                 let atta = document.createElement('input');
-                atta.name = 'attachnew[' + resps[3] + ']';
+                atta.name = 'attachnew[' + resps[3] + '][description]';
                 atta.style.display = 'none';
                 document.querySelector('#postbox').append(atta);
                 resolve(
