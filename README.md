@@ -10,7 +10,7 @@
 ```
 cd src
 yarn
-composer installl
+composer install
 ```
 
 然后将src下文件粘贴到`/plugin/codfrm_markdown`中
@@ -23,7 +23,8 @@ composer installl
 docker-compose up -d
 ```
 
-启动docker后,在runtime/config/config_global.php文件后加入
+启动docker，安装好discuz后，
+在runtime/config/config_global.php文件后加入下面内容可开启开发者模式
 ```php
 $_config['plugindeveloper'] = 2;
 ```

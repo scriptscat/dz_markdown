@@ -111,6 +111,14 @@
     margin: 10px 0;
 }
 
-.markdown-body .md-img{
+.markdown-body .md-img {
+    cursor: pointer;
+}
+
+.markdown-body{
+    padding: 0 8px;
+}
+
+.markdown-body .anchor {
     cursor: pointer;
 }

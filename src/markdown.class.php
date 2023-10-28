@@ -62,6 +62,8 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
         $config->set('HTML.TargetBlank', true);
         $config->set('HTML.Forms', true);
         $config->set("Attr.AllowedInputTypes", array('checkbox'));
+        // 允许id
+        $config->set('Attr.EnableID', true);
         $purifier = new \HTMLPurifier($config);
         return $purifier->purify($html);
     }
