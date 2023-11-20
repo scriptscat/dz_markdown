@@ -10,7 +10,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./runtime/mysql:/var/lib/mysql
+      - ./runtime/3.4/mysql:/var/lib/mysql
 
   web:
     build: ./build/docker
@@ -18,7 +18,7 @@ services:
       - "80:80"
     volumes:
     - ./app.conf:/etc/nginx/http.d/default.conf
-    - ./runtime/config:/var/www/html/config
+    - ./runtime/3.4/config:/var/www/html/config
     - ./src:/var/www/html/source/plugin/codfrm_markdown
     links:
       - "mysql:database"
