@@ -80,7 +80,17 @@ window.initeditor = function (postid, editor) {
             }]],
         hooks: {
             addImageBlobHook: async (blob, callback) => {
+                // 判断图片大小
+                let maxSize = imgUpload.settings.file_size_limit * 1024;
+                if (blob.size > maxSize) {
+                    showDialog("图片大小不能超过" +
+                        (imgUpload.settings.file_size_limit / 1024).toFixed(2) + "MB",
+                        'notice', null, null, 0, null, null, null, null, sdCloseTime
+                    );
+                    return false;
+                }
                 const uploadedImageURL = await uploadImage(blob);
+
                 callback(uploadedImageURL, blob.name);
                 return false;
             },
@@ -302,6 +312,7 @@ function showEmoji() {
 function uploadImage(blob) {
     return new Promise((resolve) => {
         let xhr = new XMLHttpRequest();
+        // imgUpload.settings
         xhr.open('POST', "/misc.php?mod=swfupload&action=swfupload&operation=upload&fid=2&simple=2")
         let form = new FormData();
         form.append("uid", discuz_uid);

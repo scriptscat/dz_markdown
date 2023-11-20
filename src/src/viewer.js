@@ -22,21 +22,29 @@ window.addEventListener("DOMContentLoaded", () => {
             // dz太坑了,有个base标签,导致hash不对
             ev.stopPropagation()
             ev.preventDefault()
-            scrollIntoView(ev.target.hash.replace('#', ''));
+            const hash = ev.target.hash.replace('#', '');
+            scrollIntoView(hash);
+            // url改变
             return false;
         }
     })
     // 判断链接中是否有锚点
-    let hash = location.hash.replace('#user-content-', '')
-    let el = document.querySelector('#user-content-' + hash)
+    let hash = location.hash;
+    let el = document.querySelector('#user-content-' + hash.substring(1))
     if (el) {
-        el.scrollIntoView(true)
+        const yOffset = -50;
+        const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
+        window.scrollTo({top: y, behavior: 'smooth'});
     }
 })
 
 window.scrollIntoView = function (id) {
     let el = document.getElementById('user-content-' + id)
     if (el) {
-        el.scrollIntoView(true)
+        location.hash = id;
+        // 处理偏移
+        const yOffset = -50;
+        const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
+        window.scrollTo({top: y, behavior: 'smooth'});
     }
 }
