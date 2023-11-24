@@ -13,6 +13,59 @@ class plugin_codfrm_markdown
 
 }
 
+
+class config
+{
+
+    private $config = [];
+
+    public static $instance;
+
+    public static function getInstance(): config
+    {
+        if (!self::$instance) {
+            self::$instance = new config();
+        }
+        return self::$instance;
+    }
+
+    public function __construct()
+    {
+        global $_G;
+        $config = $_G['cache']['plugin']['codfrm_markdown'];
+        $this->config = [
+            'allow_groups' => unserialize($config['allow_groups']),
+            'enable_emoji' => $config['enable_emoji'],
+            'help_site' => $config['help_site']
+        ];
+    }
+
+    public function isAllow()
+    {
+        global $_G;
+        var_dump($this->config['allow_groups']);
+        if (in_array($_G['groupid'], $this->config['allow_groups'])) {
+            return true;
+        } else if (empty($this->config['allow_groups']) ||
+            in_array("", $this->config['allow_groups'])
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    public function enableEmoji()
+    {
+        return $this->config['enable_emoji'] === '1';
+    }
+
+    public function helpSite()
+    {
+        return $this->config['help_site'] || 'https://bbs.tampermonkey.net.cn/thread-3311-1-1.html';
+    }
+
+}
+
 class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
 {
 
@@ -33,25 +86,35 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
 
     public function post_middle()
     {
+        if (!config::getInstance()->isAllow()) {
+            return null;
+        }
+
         include_once template('codfrm_markdown:module');
 
+        $opts = [
+            'enableEmoji' => config::getInstance()->enableEmoji() ? 'true' : 'false',
+            'helpSite' => config::getInstance()->helpSite(),
+        ];
         // 判断编辑还是新增
         if ($_GET['action'] === 'edit' && $_GET['tid']) {
             $message = C::t('forum_post')->fetch('tid:' . $_GET['tid'], $_GET['pid'], true)['message'];
             if (strlen($message) < 9) {
-                return tpl_post_attribute_extra_body();
+                return tpl_post_attribute_extra_body('md', '', $opts);
             }
             $mdpos = strpos($message, '[md]');
             if ($mdpos === false) {
-                return tpl_post_attribute_extra_body('dz');
+                return tpl_post_attribute_extra_body('dz', '', $opts);
             }
             $message = $this->dealPrefix($message, $mdpos);
             if (substr($message[1], 0, 4) === '[md]') {
-                return tpl_post_attribute_extra_body('md', $this->dealHTML(htmlspecialchars($message[0] . $this->parseMarkdown($message[1]))));
+                return tpl_post_attribute_extra_body('md',
+                    $this->dealHTML(htmlspecialchars($message[0] . $this->parseMarkdown($message[1]))),
+                    $opts);
             }
-            return tpl_post_attribute_extra_body('dz');
+            return tpl_post_attribute_extra_body('dz', '', $opts);
         }
-        return tpl_post_attribute_extra_body();
+        return tpl_post_attribute_extra_body('md', '', $opts);
     }
 
     // 过滤xss
@@ -71,7 +134,13 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
     function viewthread_title_extra()
     {
         global $_G;
-        return "<script src=\"{$_G['siteurl']}source/plugin/codfrm_markdown/dist/viewer.js\"></script>";
+        $ret = "<script src=\"{$_G['siteurl']}source/plugin/codfrm_markdown/dist/viewer.js\"></script>";
+
+        $ret .= "<script>markdownView({
+enableEmoji: " . (config::getInstance()->enableEmoji() ? 'true' : 'false') . ",
+        })</script>";
+
+        return $ret;
     }
 
     function dealPrefix($message, $mdpos)

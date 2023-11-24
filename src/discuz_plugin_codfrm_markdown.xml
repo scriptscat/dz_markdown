@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <root>
 	<item id="Title"><![CDATA[Discuz! Plugin]]></item>
-	<item id="Version"><![CDATA[X3.1,X3.2,X3.3,X3.4,X3.5]]></item>
-	<item id="Time"><![CDATA[2022-04-10 19:17]]></item>
+	<item id="Version"><![CDATA[X3.4]]></item>
+	<item id="Time"><![CDATA[2023-11-24 15:25]]></item>
 	<item id="From"><![CDATA[Discuz! Board (http://127.0.0.1/)]]></item>
 	<item id="Data">
 		<item id="plugin">
@@ -44,7 +44,38 @@
 				</item>
 			</item>
 		</item>
-		<item id="version"><![CDATA[X3.1,X3.2,X3.3,X3.4,X3.5]]></item>
+		<item id="version"><![CDATA[X3.4]]></item>
+		<item id="var">
+			<item id="0">
+				<item id="displayorder"><![CDATA[0]]></item>
+				<item id="title"><![CDATA[允许使用的用户组]]></item>
+				<item id="description"><![CDATA[为空表示全部允许]]></item>
+				<item id="variable"><![CDATA[allow_groups]]></item>
+				<item id="type"><![CDATA[groups]]></item>
+				<item id="extra"><![CDATA[]]></item>
+				<item id="__value">
+					<item id="0"><![CDATA[]]></item>
+				</item>
+			</item>
+			<item id="1">
+				<item id="displayorder"><![CDATA[0]]></item>
+				<item id="title"><![CDATA[表情包]]></item>
+				<item id="description"><![CDATA[]]></item>
+				<item id="variable"><![CDATA[enable_emoji]]></item>
+				<item id="type"><![CDATA[radio]]></item>
+				<item id="value"><![CDATA[1]]></item>
+				<item id="extra"><![CDATA[]]></item>
+			</item>
+			<item id="2">
+				<item id="displayorder"><![CDATA[0]]></item>
+				<item id="title"><![CDATA[帮助文档]]></item>
+				<item id="description"><![CDATA[]]></item>
+				<item id="variable"><![CDATA[help_site]]></item>
+				<item id="type"><![CDATA[text]]></item>
+				<item id="value"><![CDATA[https://bbs.tampermonkey.net.cn/thread-3311-1-1.html]]></item>
+				<item id="extra"><![CDATA[]]></item>
+			</item>
+		</item>
 		<item id="installfile"><![CDATA[install.php]]></item>
 		<item id="upgradefile"><![CDATA[upgrade.php]]></item>
 	</item>

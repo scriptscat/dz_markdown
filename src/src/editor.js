@@ -9,7 +9,7 @@ import "./prismjs";
 import "./viewer.css";
 
 
-window.initeditor = function (postid, editor) {
+window.initeditor = function (postid, editor, opts) {
     let mdDiv = document.querySelector('#md');
     if (!mdDiv) {
         return;
@@ -39,7 +39,7 @@ window.initeditor = function (postid, editor) {
         return button;
     }
 
-    function helpBtn() {
+    function helpBtn(link) {
         const button = document.createElement('button');
         button.className = 'toastui-editor-toolbar-icons last';
         button.style.backgroundImage = 'none';
@@ -47,20 +47,16 @@ window.initeditor = function (postid, editor) {
         button.innerHTML = `<i>❓</i>`;
         button.type = "button";
         button.onclick = () => {
-            window.open("https://bbs.tampermonkey.net.cn/thread-3311-1-1.html", "_blank");
+            window.open(link, "_blank");
         }
         return button;
     }
 
     const emoji = showEmoji();
 
-    const md = new Editor({
-        el: mdEditor,
-        initialValue: html,
-        height: '500px',
-        initialEditType: 'markdown',
-        previewStyle: 'vertical',
-        toolbarItems: [['heading', 'bold', 'italic', 'strike', {
+    const firstPlugins = ['heading', 'bold', 'italic', 'strike'];
+    if (opts.enableEmoji) {
+        firstPlugins.push({
             el: emojiBtn(),
             command: 'emoji',
             tooltip: '表情包',
@@ -68,16 +64,30 @@ window.initeditor = function (postid, editor) {
                 body: emoji.body(),
                 className: 'toastui-editor-popup-add-image',
             },
+        });
+    }
 
-        }],
-            ['hr', 'quote'],
-            ['ul', 'ol', 'task', 'indent', 'outdent'],
-            ['table', 'image', 'link'],
-            ['code', 'codeblock'], [{
-                el: helpBtn(),
-                command: 'help',
-                tooltip: '帮助',
-            }]],
+    const plugins = [firstPlugins,
+        ['hr', 'quote'],
+        ['ul', 'ol', 'task', 'indent', 'outdent'],
+        ['table', 'image', 'link'],
+        ['code', 'codeblock']];
+
+    if (opts.helpSite) {
+        plugins.push([{
+            el: helpBtn(opts.helpSite),
+            command: 'help',
+            tooltip: '帮助',
+        }]);
+    }
+
+    const md = new Editor({
+        el: mdEditor,
+        initialValue: html,
+        height: '500px',
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        toolbarItems: plugins,
         hooks: {
             addImageBlobHook: async (blob, callback) => {
                 // 判断图片大小
