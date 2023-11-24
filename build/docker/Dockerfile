@@ -12,7 +12,7 @@ RUN apk update && \
     chmod 755 docker-entrypoint.sh && \
     docker-php-ext-install mysqli
 
-ENV DZ_URL https://gitee.com/Discuz/DiscuzX/attach_files/1477547/download
+ENV DZ_URL https://gitee.com/Discuz/DiscuzX/releases/download/v3.4-20210630/Discuz_X3.4_SC_UTF8_20210630.zip
 
 ENV DZ_WWW_ROOT /var/www/html
 
