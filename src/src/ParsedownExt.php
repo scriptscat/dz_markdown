@@ -224,4 +224,68 @@ class ParsedownExt extends ParsedownExtra
         return str_replace("\n", "<br />", $ret);
     }
 
+
+    protected function element(array $Element)
+    {
+        if ($this->safeMode) {
+            $Element = $this->sanitiseElement($Element);
+        }
+
+        $markup = '<' . $Element['name'];
+
+        if (isset($Element['attributes'])) {
+            foreach ($Element['attributes'] as $name => $value) {
+                if ($value === null) {
+                    continue;
+                }
+
+                $markup .= ' ' . $name . '="' . self::escape($value) . '"';
+            }
+        }
+
+        $permitRawHtml = false;
+
+        if (isset($Element['text'])) {
+            $text = $Element['text'];
+        }
+        // very strongly consider an alternative if you're writing an
+        // extension
+        elseif (isset($Element['rawHtml'])) {
+            $text = $Element['rawHtml'];
+            $allowRawHtmlInSafeMode = isset($Element['allowRawHtmlInSafeMode']) && $Element['allowRawHtmlInSafeMode'];
+            $permitRawHtml = !$this->safeMode || $allowRawHtmlInSafeMode;
+        }
+
+        if (isset($text)) {
+            $markup .= '>';
+
+            if (!isset($Element['nonNestables'])) {
+                $Element['nonNestables'] = array();
+            }
+
+            if (isset($Element['handler'])) {
+                $markup .= $this->{$Element['handler']}($text, $Element['nonNestables']);
+            } elseif (!$permitRawHtml) {
+                $markup .= self::escape($text, true);
+            } else {
+                $markup .= $text;
+            }
+
+            $markup .= '</' . $Element['name'] . '>';
+        } else {
+            $markup .= ' />';
+        }
+
+        return $markup;
+    }
+
+    protected static function escape($text, $allowQuotes = false)
+    {
+        global $_G;
+        if ($_G['charset'] == "gbk") {
+            return $text;
+        }
+        return htmlspecialchars($text, $allowQuotes ? ENT_NOQUOTES : ENT_QUOTES, 'UTF-8');
+    }
+
 }

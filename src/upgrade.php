@@ -5,7 +5,6 @@ if (!defined('IN_DISCUZ')) {
 }
 
 $sql = <<<EOF
-
 CREATE TABLE IF NOT EXISTS `pre_custom_emoji` (
   `uid` bigint(20) NOT NULL,
   `url` varchar(255) NOT NULL,

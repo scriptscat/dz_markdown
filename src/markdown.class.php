@@ -121,7 +121,9 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
     function dealHTML($html)
     {
         require_once "vendor/autoload.php";
+        global $_G;
         $config = \HTMLPurifier_HTML5Config::createDefault();
+        $config->set('Core.Encoding', $_G['charset']);
         $config->set('HTML.TargetBlank', true);
         $config->set('HTML.Forms', true);
         $config->set("Attr.AllowedInputTypes", array('checkbox'));

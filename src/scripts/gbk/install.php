@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `pre_custom_emoji` (
   `createtime` bigint(20) NOT NULL,
   KEY `url` (`url`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=gbk COLLATE=gbk_chinese_ci;
 EOF;
 
 runquery($sql);
