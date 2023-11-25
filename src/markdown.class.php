@@ -43,7 +43,6 @@ class config
     public function isAllow()
     {
         global $_G;
-        var_dump($this->config['allow_groups']);
         if (in_array($_G['groupid'], $this->config['allow_groups'])) {
             return true;
         } else if (empty($this->config['allow_groups']) ||
@@ -61,7 +60,7 @@ class config
 
     public function helpSite()
     {
-        return $this->config['help_site'] || 'https://bbs.tampermonkey.net.cn/thread-3311-1-1.html';
+        return $this->config['help_site'] ?? 'https://bbs.tampermonkey.net.cn/thread-3311-1-1.html';
     }
 
 }
@@ -147,7 +146,6 @@ enableEmoji: " . (config::getInstance()->enableEmoji() ? 'true' : 'false') . ",
 
     function dealPrefix($message, $mdpos)
     {
-//        var_dump($message);
         // 处理"本帖最后由"前缀
         $prefix = '';
         if (strpos($message, '[i=s] 本帖最后由') === 0) {
