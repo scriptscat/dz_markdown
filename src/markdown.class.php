@@ -85,6 +85,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
 
     public function post_middle()
     {
+        global $_G;
         if (!config::getInstance()->isAllow()) {
             return null;
         }
@@ -107,8 +108,12 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
             }
             $message = $this->dealPrefix($message, $mdpos);
             if (substr($message[1], 0, 4) === '[md]') {
+                $content = $message[0] . $this->parseMarkdown($message[1]);
+                if ($_G['charset'] !== 'gbk') {
+                    $content = htmlspecialchars($content);
+                }
                 return tpl_post_attribute_extra_body('md',
-                    $this->dealHTML(htmlspecialchars($message[0] . $this->parseMarkdown($message[1]))),
+                    $this->dealHTML($content),
                     $opts);
             }
             return tpl_post_attribute_extra_body('dz', '', $opts);
