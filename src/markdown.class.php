@@ -130,7 +130,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
     // 过滤xss
     function dealHTML($html)
     {
-        require_once "vendor/autoload.php";
+        require "vendor/autoload.php";
         global $_G;
         $config = \HTMLPurifier_HTML5Config::createDefault();
         $config->set('Core.Encoding', $_G['charset']);
