@@ -5,7 +5,6 @@ namespace Codfrm\DzMarkdown;
 
 use ParsedownExtra;
 
-
 class ParsedownExt extends ParsedownExtra
 {
     public function __construct()

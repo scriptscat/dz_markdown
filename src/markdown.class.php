@@ -1,10 +1,5 @@
 <?php
 
-
-ini_set('display_errors', 1);            //错误信息
-ini_set('display_startup_errors', 1);    //php启动错误信息
-error_reporting(-1);
-
 use Codfrm\DzMarkdown\ParsedownExt;
 use Michelf\MarkdownExtra;
 
@@ -135,7 +130,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
     // 过滤xss
     function dealHTML($html)
     {
-        require "vendor/autoload.php";
+        require_once "vendor/autoload.php";
         global $_G;
         $config = \HTMLPurifier_HTML5Config::createDefault();
         $config->set('Core.Encoding', $_G['charset']);
@@ -194,9 +189,9 @@ enableEmoji: " . (config::getInstance()->enableEmoji() ? 'true' : 'false') . ",
         if (!$postlist) {
             return;
         }
-        require 'vendor/erusev/parsedown/Parsedown.php';
-        require 'vendor/erusev/parsedown-extra/ParsedownExtra.php';
-        require 'src/ParsedownExt.php';
+        require_once 'vendor/erusev/parsedown/Parsedown.php';
+        require_once 'vendor/erusev/parsedown-extra/ParsedownExtra.php';
+        require_once 'src/ParsedownExt.php';
         $Parsedown = new ParsedownExt();
         $Parsedown->setSafeMode(false);
         foreach ($postlist as $k => $post) {
@@ -250,6 +245,10 @@ class mobileplugin_codfrm_markdown_forum extends plugin_codfrm_markdown_forum
     public function viewthread_bottom_mobile_output()
     {
         return parent::viewthread_posttop_output();
+    }
+
+    public function viewthread_fastpost_btn_extra()
+    {
     }
 }
 

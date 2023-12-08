@@ -196,6 +196,14 @@ window.initeditor = function (postid, editor, opts) {
             }
             return true;
         });
+        // 拦截赋值
+        let parseurl = window.parseurl;
+        window.parseurl = function (message) {
+            if (editor === "md") {
+                return getMarkdownContent();
+            }
+            return parseurl(message);
+        }
         const succeedhandle_fastpost = window.succeedhandle_fastpost;
         window.succeedhandle_fastpost = function (url, msg, param) {
             if (editor === "md") {
