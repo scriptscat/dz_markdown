@@ -10,13 +10,25 @@ import "./viewer.css";
 
 
 window.initeditor = function (postid, editor, opts) {
+    opts.height = opts.height || '500px';
+    opts.previewStyle = opts.previewStyle || 'vertical';
     let mdDiv = document.querySelector('#md');
     if (!mdDiv) {
         return;
     }
     let mdEditor = document.querySelector('#md-editor');
     let saveEl = document.querySelector('#md-autosave');
-    let dzDiv = document.querySelector('.edt');
+    let dzDiv = document.querySelector(opts.dzDivClass);
+    // 帖子下面的回复
+    if (opts.formId === "#fastpostform") {
+        // 将mddiv移动到dzdiv后
+        dzDiv.after(mdDiv);
+        let mdSwitch = document.querySelector("#md-switch");
+        mdDiv.after(saveEl);
+        saveEl.after(mdSwitch);
+        opts.height = '300px';
+        opts.previewStyle = 'tab';
+    }
     if (editor !== 'md') {
         mdDiv.style.display = 'none';
     } else {
@@ -84,22 +96,22 @@ window.initeditor = function (postid, editor, opts) {
     const md = new Editor({
         el: mdEditor,
         initialValue: html,
-        height: '500px',
+        height: opts.height,
         initialEditType: 'markdown',
-        previewStyle: 'vertical',
+        previewStyle: opts.previewStyle,
         toolbarItems: plugins,
         hooks: {
             addImageBlobHook: async (blob, callback) => {
                 // 判断图片大小
-                let maxSize = imgUpload.settings.file_size_limit * 1024;
+                let maxSize = (window.imgUpload || window.upload).settings.file_size_limit * 1024;
                 if (blob.size > maxSize) {
                     showDialog("图片大小不能超过" +
-                        (imgUpload.settings.file_size_limit / 1024).toFixed(2) + "MB",
+                        (maxSize / 1024).toFixed(2) + "MB",
                         'notice', null, null, 0, null, null, null, null, sdCloseTime
                     );
                     return false;
                 }
-                const uploadedImageURL = await uploadImage(blob);
+                const uploadedImageURL = await uploadImage(blob, opts);
 
                 callback(uploadedImageURL, blob.name);
                 return false;
@@ -115,6 +127,13 @@ window.initeditor = function (postid, editor, opts) {
     document.querySelector("#recover-text").onclick = () => {
         md.setMarkdown(origin);
         return false;
+    }
+    const getMarkdownContent = () => {
+        let content = md.getMarkdown()
+        if (content.trim() === "") {
+            return "";
+        }
+        return "[md]" + content + "[/md]";
     }
     setInterval(() => {
         localStorage['md-autosave-' + postid] = md.getMarkdown();
@@ -134,15 +153,63 @@ window.initeditor = function (postid, editor, opts) {
         }
         return false;
     }
-    document.querySelector('#postform').addEventListener("submit", function () {
+    document.querySelector(opts.formId).addEventListener("submit", function () {
         localStorage.removeItem('md-autosave-' + postid);
         return true;
     });
+    // 门户
+    if (opts.formId === "#articleform") {
+        const validate = function () {
+            let obj = this;
+            const title = $('title');
+            if (title) {
+                const slen = dstrlen(title.value);
+                if (slen < 1 || slen > 80) {
+                    alert("标题长度不符合要求");
+                    title.focus();
+                    return false;
+                }
+            }
+            if (!check_catid()) {
+                return false;
+            }
+            if (editor === "md") {
+                localStorage.removeItem('md-autosave-' + postid);
+                $('uchome-ttHtmlEditor').value = getMarkdownContent();
+            } else {
+                edit_save();
+            }
+            window.onbeforeunload = null;
+            obj.form.submit();
+            return false;
+        }
+        window.addEventListener("load", function () {
+            let btn = document.querySelector('#issuance');
+            btn.removeAttribute("onclick");
+            btn.onclick = validate;
+        });
+    } else if (opts.formId === "#fastpostform") {
+        // 底部快速回复
+        document.querySelector('#fastpostsubmit').addEventListener("click", function () {
+            if (editor === "md") {
+                document.querySelector("#fastpostmessage").value = getMarkdownContent();
+            }
+            return true;
+        });
+        const succeedhandle_fastpost = window.succeedhandle_fastpost;
+        window.succeedhandle_fastpost = function (url, msg, param) {
+            if (editor === "md") {
+                md.setMarkdown("");
+                localStorage.removeItem('md-autosave-' + postid);
+            }
+            return succeedhandle_fastpost(url, msg, param);
+        }
+    }
     // hook getEditorContents 方法
     let getEditorContents = window.getEditorContents;
     window.getEditorContents = function () {
         if (editor === 'md') {
-            return "[md]" + md.getMarkdown() + "[/md]";
+            return getMarkdownContent();
         }
         return getEditorContents();
     }
@@ -319,14 +386,13 @@ function showEmoji() {
     return ret;
 }
 
-function uploadImage(blob) {
+function uploadImage(blob, opts) {
     return new Promise((resolve) => {
         let xhr = new XMLHttpRequest();
-        // imgUpload.settings
         xhr.open('POST', "/misc.php?mod=swfupload&action=swfupload&operation=upload&fid=2&simple=2")
         let form = new FormData();
         form.append("uid", discuz_uid);
-        form.append("hash", document.querySelector("[name='hash']").value);
+        form.append("hash", (window.imgUpload || window.upload).settings.post_params.hash);
         form.append("type", "image")
         form.append("filetype", blob.type);
         form.append("size", blob.size);
@@ -340,7 +406,7 @@ function uploadImage(blob) {
                 let atta = document.createElement('input');
                 atta.name = 'attachnew[' + resps[3] + '][description]';
                 atta.style.display = 'none';
-                document.querySelector('#postbox').append(atta);
+                document.querySelector(opts.formId).append(atta);
                 resolve(
                     "data/attachment/forum/" + resps[5]
                 );

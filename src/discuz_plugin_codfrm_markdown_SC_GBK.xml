@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <root>
 	<item id="Title"><![CDATA[Discuz! Plugin]]></item>
-	<item id="Version"><![CDATA[X3.4]]></item>
-	<item id="Time"><![CDATA[2023-11-24 15:54]]></item>
+	<item id="Version"><![CDATA[X3.5]]></item>
+	<item id="Time"><![CDATA[2023-12-08 11:42]]></item>
 	<item id="From"><![CDATA[Discuz! Board (http://127.0.0.1/)]]></item>
 	<item id="Data">
 		<item id="plugin">
 			<item id="available"><![CDATA[1]]></item>
 			<item id="adminid"><![CDATA[1]]></item>
-			<item id="name"><![CDATA[markdown - ÍõÒ»Ö®]]></item>
+			<item id="name"><![CDATA[markdown - çŽ‹ä¸€ä¹‹]]></item>
 			<item id="identifier"><![CDATA[codfrm_markdown]]></item>
-			<item id="description"><![CDATA[ÓÍºïÖÐÎÄÍøÓÃmarkdown±à¼­Æ÷²å¼þ]]></item>
+			<item id="description"><![CDATA[æ²¹çŒ´ä¸­æ–‡ç½‘ç”¨markdownç¼–è¾‘å™¨æ’ä»¶]]></item>
 			<item id="datatables"><![CDATA[]]></item>
 			<item id="directory"><![CDATA[codfrm_markdown/]]></item>
 			<item id="copyright"><![CDATA[blog.icodef.com]]></item>
-			<item id="version"><![CDATA[1.1.0]]></item>
+			<item id="version"><![CDATA[1.2.0]]></item>
 			<item id="__modules">
 				<item id="0">
 					<item id="name"><![CDATA[markdown]]></item>
@@ -44,12 +44,12 @@
 				</item>
 			</item>
 		</item>
-		<item id="version"><![CDATA[X3.4]]></item>
+		<item id="version"><![CDATA[X3.5]]></item>
 		<item id="var">
 			<item id="0">
 				<item id="displayorder"><![CDATA[0]]></item>
-				<item id="title"><![CDATA[ÔÊÐíÊ¹ÓÃµÄÓÃ»§×é]]></item>
-				<item id="description"><![CDATA[Îª¿Õ±íÊ¾È«²¿ÔÊÐí]]></item>
+				<item id="title"><![CDATA[å…è®¸ä½¿ç”¨çš„ç”¨æˆ·ç»„]]></item>
+				<item id="description"><![CDATA[ä¸ºç©ºè¡¨ç¤ºå…¨éƒ¨å…è®¸]]></item>
 				<item id="variable"><![CDATA[allow_groups]]></item>
 				<item id="type"><![CDATA[groups]]></item>
 				<item id="extra"><![CDATA[]]></item>
@@ -59,7 +59,7 @@
 			</item>
 			<item id="1">
 				<item id="displayorder"><![CDATA[0]]></item>
-				<item id="title"><![CDATA[±íÇé°ü]]></item>
+				<item id="title"><![CDATA[è¡¨æƒ…åŒ…]]></item>
 				<item id="description"><![CDATA[]]></item>
 				<item id="variable"><![CDATA[enable_emoji]]></item>
 				<item id="type"><![CDATA[radio]]></item>
@@ -68,7 +68,7 @@
 			</item>
 			<item id="2">
 				<item id="displayorder"><![CDATA[0]]></item>
-				<item id="title"><![CDATA[°ïÖúÎÄµµ]]></item>
+				<item id="title"><![CDATA[å¸®åŠ©æ–‡æ¡£]]></item>
 				<item id="description"><![CDATA[]]></item>
 				<item id="variable"><![CDATA[help_site]]></item>
 				<item id="type"><![CDATA[text]]></item>

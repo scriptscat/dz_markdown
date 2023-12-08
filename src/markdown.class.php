@@ -1,6 +1,10 @@
 <?php
 
 
+ini_set('display_errors', 1);            //错误信息
+ini_set('display_startup_errors', 1);    //php启动错误信息
+error_reporting(-1);
+
 use Codfrm\DzMarkdown\ParsedownExt;
 use Michelf\MarkdownExtra;
 
@@ -83,7 +87,7 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
         return preg_replace("/\[media.*?\](.*?)\[\/media\]/", "$1", $message);
     }
 
-    public function post_middle()
+    protected function mdEditor($dzDivClass, $formId, $default = "md")
     {
         global $_G;
         if (!config::getInstance()->isAllow()) {
@@ -92,10 +96,12 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
 
         include_once template('codfrm_markdown:module');
 
-        $opts = [
+        $opts = json_encode([
             'enableEmoji' => config::getInstance()->enableEmoji() ? 'true' : 'false',
             'helpSite' => config::getInstance()->helpSite(),
-        ];
+            'dzDivClass' => $dzDivClass,
+            'formId' => $formId,
+        ], JSON_UNESCAPED_UNICODE);
         // 判断编辑还是新增
         if ($_GET['action'] === 'edit' && $_GET['tid']) {
             $message = C::t('forum_post')->fetch('tid:' . $_GET['tid'], $_GET['pid'], true)['message'];
@@ -118,13 +124,18 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
             }
             return tpl_post_attribute_extra_body('dz', '', $opts);
         }
-        return tpl_post_attribute_extra_body('md', '', $opts);
+        return tpl_post_attribute_extra_body($default, '', $opts);
+    }
+
+    public function post_middle()
+    {
+        return $this->mdEditor('.edt', "#postform");
     }
 
     // 过滤xss
     function dealHTML($html)
     {
-        require_once "vendor/autoload.php";
+        require "vendor/autoload.php";
         global $_G;
         $config = \HTMLPurifier_HTML5Config::createDefault();
         $config->set('Core.Encoding', $_G['charset']);
@@ -172,12 +183,20 @@ enableEmoji: " . (config::getInstance()->enableEmoji() ? 'true' : 'false') . ",
         return [$prefix, $message];
     }
 
+    function viewthread_fastpost_btn_extra()
+    {
+        return $this->mdEditor('#fastpostform .plc .cl', '#fastpostform', "dz");
+    }
+
     function viewthread_posttop_output()
     {
         global $postlist;
-        require_once 'vendor/erusev/parsedown/Parsedown.php';
-        require_once 'vendor/erusev/parsedown-extra/ParsedownExtra.php';
-        require_once 'src/ParsedownExt.php';
+        if (!$postlist) {
+            return;
+        }
+        require 'vendor/erusev/parsedown/Parsedown.php';
+        require 'vendor/erusev/parsedown-extra/ParsedownExtra.php';
+        require 'src/ParsedownExt.php';
         $Parsedown = new ParsedownExt();
         $Parsedown->setSafeMode(false);
         foreach ($postlist as $k => $post) {
@@ -231,5 +250,15 @@ class mobileplugin_codfrm_markdown_forum extends plugin_codfrm_markdown_forum
     public function viewthread_bottom_mobile_output()
     {
         return parent::viewthread_posttop_output();
+    }
+}
+
+
+// 支持门户
+class plugin_codfrm_markdown_portal extends plugin_codfrm_markdown_forum
+{
+    function portalcp_middle()
+    {
+        return parent::mdEditor(".pbw", "#articleform");
     }
 }
