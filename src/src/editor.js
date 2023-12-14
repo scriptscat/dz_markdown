@@ -8,6 +8,7 @@ import Prism from 'prismjs';
 import "./prismjs";
 import "./viewer.css";
 
+Prism.highlightAllUnder(document);
 
 window.initeditor = function (postid, editor, opts) {
     opts.height = opts.height || '500px';
