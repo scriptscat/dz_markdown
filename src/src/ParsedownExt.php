@@ -100,10 +100,10 @@ class ParsedownExt extends ParsedownExtra
         // 入栈
         $this->menuStack[] =& $menu[count($menu) - 1];
 
-        $ret['element']['text'] = "<h2><a id=\"user-content-" . urlencode($ret['element']['text']) .
+        $ret['element']['text'] = "<a id=\"user-content-" . urlencode(ltrim($ret['element']['text'], '#')) .
             "\" class=\"anchor\" aria-hidden=\"true\" href=\"#" .
-            urlencode($ret['element']['text']) . "\" >" .
-            "<span class=\"octicon octicon-link\"></span></a>" . $ret['element']['text'] . "</h2>";
+            urlencode(ltrim($ret['element']['text'], '#')) . "\" >" .
+            "<span class=\"octicon octicon-link\"></span></a>" . $ret['element']['text'];
 
         return $ret;
     }
@@ -274,7 +274,6 @@ class ParsedownExt extends ParsedownExtra
         } else {
             $markup .= ' />';
         }
-
         return $markup;
     }
 

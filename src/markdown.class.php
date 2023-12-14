@@ -148,9 +148,9 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
         global $_G;
         $ret = "<script src=\"{$_G['siteurl']}source/plugin/codfrm_markdown/dist/viewer.js\"></script>";
 
-        $ret .= "<script>markdownView({
-enableEmoji: " . (config::getInstance()->enableEmoji() ? 'true' : 'false') . ",
-        })</script>";
+        $ret .= "<script>markdownView(" . json_encode([
+                "enableEmoji" => config::getInstance()->enableEmoji(),
+            ], JSON_UNESCAPED_UNICODE) . ")</script>";
 
         return $ret;
     }

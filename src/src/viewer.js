@@ -3,7 +3,7 @@ import './viewer.css';
 import Prism from 'prismjs';
 import './prismjs';
 
-Prism.highlightAllUnder(document, true);
+Prism.highlightAll(true);
 
 function enableEmoji() {
     window.addEventListener("DOMContentLoaded", () => {
@@ -83,7 +83,6 @@ window.addEventListener("DOMContentLoaded", () => {
             } else if (ev.target.className === 'octicon octicon-link') {
                 ev.stopPropagation()
                 ev.preventDefault()
-                console.log(ev)
                 scrollIntoView(ev.target.parentNode.hash.replace('#', ''));
                 return false;
             } else if (ev.target.tagName === 'A' && ev.target.getAttribute('href').startsWith('#')) {
@@ -98,7 +97,8 @@ window.addEventListener("DOMContentLoaded", () => {
         })
         // 判断链接中是否有锚点
         let hash = location.hash;
-        let el = document.querySelector('#user-content-' + hash.substring(1))
+        let el = document.querySelector('#user-content-' +
+            hash.substring(1).replaceAll('%', '\\%'));
         if (el) {
             const yOffset = -50;
             const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
