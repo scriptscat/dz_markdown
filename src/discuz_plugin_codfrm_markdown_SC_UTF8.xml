@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <root>
 	<item id="Title"><![CDATA[Discuz! Plugin]]></item>
-	<item id="Version"><![CDATA[X3.5]]></item>
+	<item id="Version"><![CDATA[X3.1,X3.2,X3.3,X3.4,X3.5]]></item>
 	<item id="Time"><![CDATA[2023-12-08 11:42]]></item>
 	<item id="From"><![CDATA[Discuz! Board (http://127.0.0.1/)]]></item>
 	<item id="Data">
@@ -44,7 +44,7 @@
 				</item>
 			</item>
 		</item>
-		<item id="version"><![CDATA[X3.5]]></item>
+		<item id="version"><![CDATA[X3.1,X3.2,X3.3,X3.4,X3.5]]></item>
 		<item id="var">
 			<item id="0">
 				<item id="displayorder"><![CDATA[0]]></item>
