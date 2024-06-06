@@ -3,15 +3,185 @@
 
 namespace Codfrm\DzMarkdown;
 
+use InvalidArgumentException;
 use ParsedownExtra;
+
+// thank https://github.com/BenjaminHoegh/ParsedownExtended/blob/main/src/ParsedownExtended.php
 
 class ParsedownExt extends ParsedownExtra
 {
+
+    private $settings = [];
+    // Standard settings
+    private $defaultSettings = [
+        'math' => [
+            'enabled' => false,
+            'inline' => [
+                'enabled' => true,
+                'delimiters' => [
+                    ['left' => '\\(', 'right' => '\\)'],
+                ],
+            ],
+            'block' => [
+                'enabled' => true,
+                'delimiters' => [
+                    ['left' => '$$', 'right' => '$$'],
+                    ['left' => '\\begin{equation}', 'right' => '\\end{equation}'],
+                    ['left' => '\\begin{align}', 'right' => '\\end{align}'],
+                    ['left' => '\\begin{alignat}', 'right' => '\\end{alignat}'],
+                    ['left' => '\\begin{gather}', 'right' => '\\end{gather}'],
+                    ['left' => '\\begin{CD}', 'right' => '\\end{CD}'],
+                    ['left' => '\\[', 'right' => '\\]'],
+                ],
+            ],
+        ],
+    ];
+
+
     public function __construct()
     {
 //        array_unshift($this->BlockTypes['<'], 'HtmlTag');
 //        array_unshift($this->voidElements,'div');
+        $this->settings = $this->defaultSettings;
+        $this->addBlockType(['\\', '$'], 'MathNotation');
     }
+
+
+    private function addBlockType(array $markers, string $funcName): void
+    {
+        foreach ($markers as $marker) {
+            if (!isset($this->BlockTypes[$marker])) {
+                $this->BlockTypes[$marker] = [];
+            }
+
+            // add to specialcharecters array
+            if (!in_array($marker, $this->specialCharacters)) {
+                $this->specialCharacters[] = $marker;
+            }
+
+            // add to the beginning of the array so it has priority
+            $this->BlockTypes[$marker][] = $funcName;
+        }
+    }
+
+
+    protected function blockMathNotation($Line)
+    {
+        foreach ($this->settings['math']['block']['delimiters'] as $config) {
+
+            $leftMarker = preg_quote($config['left'], '/');
+            $rightMarker = preg_quote($config['right'], '/');
+            $regex = '/^(?<!\\\\)(' . $leftMarker . ')(.*?)(?=(?<!\\\\)' . $rightMarker . '|$)/';
+
+            if (preg_match($regex, $Line['text'], $matches)) {
+                return [
+                    'element' => [
+                        'text' => $matches[2],
+                    ],
+                    'start' => $config['left'], // Store the start marker
+                    'end' => $config['right'], // Store the end marker
+                ];
+            }
+        }
+
+        return;
+    }
+
+
+    protected function blockMathNotationContinue($Line, $Block)
+    {
+        if (isset($Block['complete'])) {
+            return;
+        }
+
+        if (isset($Block['interrupted'])) {
+            $Block['element']['text'] .= str_repeat("\n", $Block['interrupted']);
+            unset($Block['interrupted']);
+        }
+
+        // Double escape the backslashes for regex pattern
+        $rightMarker = preg_quote($Block['end'], '/');
+        $regex = '/^(?<!\\\\)(' . $rightMarker . ')(.*)/';
+
+        if (preg_match($regex, $Line['text'], $matches)) {
+            $Block['complete'] = true;
+            $Block['math'] = true;
+            $Block['element']['text'] = $Block['start'] . $Block['element']['text'] . $Block['end'] . $matches[2];
+
+
+            return $Block;
+        }
+
+        $Block['element']['text'] .= "\n" . $Line['body'];
+
+        return $Block;
+    }
+
+
+    protected function blockMathNotationComplete($Block)
+    {
+        $Block["element"]["name"] = "div";
+        return $Block;
+    }
+
+
+    public function isEnabled(string $keyPath): bool
+    {
+        $keys = explode('.', $keyPath);
+        $current = $this->settings;
+
+        // Navigate through the settings hierarchy
+        foreach ($keys as $key) {
+            if (!isset($current[$key])) {
+                $backtrace = debug_backtrace();
+                $caller = $backtrace[0];
+                $errorMessage = "The setting '$keyPath' does not exist. Called in " . ($caller['file'] ?? 'unknown') . " on line " . ($caller['line'] ?? 'unknown');
+                throw new InvalidArgumentException($errorMessage);
+            }
+            // Move to the next level in the settings array
+            $current = $current[$key];
+        }
+
+        // if key "enabled" exists, return its value
+        if (isset($current['enabled'])) {
+            return $current['enabled'];
+        } elseif (is_bool($current)) {
+            return $current;
+        } else {
+            $backtrace = debug_backtrace();
+            $caller = $backtrace[0];
+            $errorMessage = "The setting '$keyPath' does not have an boolean value. Called in " . ($caller['file'] ?? 'unknown') . " on line " . ($caller['line'] ?? 'unknown');
+            throw new InvalidArgumentException($errorMessage);
+        }
+    }
+
+
+    public function getSetting(string $key)
+    {
+        $keys = explode('.', $key);
+        $current = $this->settings;
+
+        foreach ($keys as $part) {
+            if (isset($current[$part])) {
+                $current = $current[$part];
+            } else {
+                $backtrace = debug_backtrace();
+                $caller = $backtrace[0]; // Gets the immediate caller. Adjust the index for more depth.
+
+                $errorMessage = "Setting '$key' does not exist. Called in " . ($caller['file'] ?? 'unknown') . " on line " . ($caller['line'] ?? 'unknown');
+                throw new InvalidArgumentException($errorMessage);
+            }
+        }
+
+        return $current;
+    }
+
+
+    public function getSettings(): array
+    {
+        return $this->settings;
+    }
+
 
     public function inlineUrl($Excerpt)
     {

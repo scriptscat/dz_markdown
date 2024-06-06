@@ -14,6 +14,8 @@ import 'prismjs/components/prism-csharp.min';
 import 'prismjs/components/prism-javascript.min';
 import 'prismjs/components/prism-typescript.min';
 import 'prismjs/components/prism-bash.min';
+import 'prismjs/components/prism-python.min';
+import 'prismjs/components/prism-css.min';
 
 // toolbar
 import 'prismjs/plugins/toolbar/prism-toolbar.min.css';
@@ -21,3 +23,4 @@ import 'prismjs/plugins/toolbar/prism-toolbar.min';
 
 // plugin
 import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min';
+

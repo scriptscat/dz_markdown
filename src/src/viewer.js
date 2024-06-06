@@ -1,10 +1,29 @@
 import 'github-markdown-css/github-markdown-light.css';
 import './viewer.css';
+import renderMathInElement from "katex/contrib/auto-render";
 
 function enableEmoji() {
     window.addEventListener("DOMContentLoaded", () => {
         let mk_bodys = document.querySelectorAll('.markdown-body')
         mk_bodys.forEach(mk_body => {
+            // katex
+            renderMathInElement(mk_body, {
+                // customised options
+                // • auto-render specific keys, e.g.:
+                delimiters: [
+                    {left: '$$latex', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                // • rendering keys, e.g.:
+                throwOnError: false,
+                strict: "warn",
+                preProcess(s){
+                    return s.trim()
+                }
+            })
+
             let div_wrap = undefined
             mk_body.addEventListener('mouseover', (evt) => {
                 if (evt.target.className.indexOf('add-emoji') === -1) {
@@ -93,12 +112,8 @@ window.addEventListener("DOMContentLoaded", () => {
         })
         // 判断链接中是否有锚点
         let hash = location.hash;
-        let el = document.querySelector('#user-content-' +
-            hash.substring(1).replaceAll('%', '\\%'));
-        if (el) {
-            const yOffset = -50;
-            const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
-            window.scrollTo({top: y, behavior: 'smooth'});
+        if (hash) {
+            scrollIntoView(hash.substring(1));
         }
     })
 })

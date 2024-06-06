@@ -7,6 +7,7 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 import Prism from 'prismjs';
 import "./prismjs";
 import "./viewer.css";
+import katex from "katex";
 
 Prism.highlightAllUnder(document);
 
@@ -123,6 +124,19 @@ window.initeditor = function (postid, editor, opts) {
         ],
         autofocus: false,
         language: 'zh-CN',
+        customHTMLRenderer: {
+            latex(node) {
+                const code = katex.renderToString(node.literal, {
+                    throwOnError: false
+                })
+                console.log(code)
+                return [
+                    {type: 'openTag', tagName: 'div', classNames: ["tui-katex"]},
+                    {type: 'html', content: code},
+                    {type: 'closeTag', tagName: 'div'}
+                ];
+            },
+        }
     });
     emoji.setMd(md);
     document.querySelector("#recover-text").onclick = () => {

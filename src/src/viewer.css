@@ -122,3 +122,7 @@
 .markdown-body .anchor {
     cursor: pointer;
 }
+
+.katex-html[aria-hidden="true"]{
+    display: none;
+}
