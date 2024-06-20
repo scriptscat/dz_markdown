@@ -35,7 +35,8 @@ class config
         $this->config = [
             'allow_groups' => unserialize($config['allow_groups']),
             'enable_emoji' => $config['enable_emoji'],
-            'help_site' => $config['help_site']
+            'help_site' => $config['help_site'],
+            'reply_enable' => $config["reply_enable"]
         ];
     }
 
@@ -60,6 +61,11 @@ class config
     public function helpSite()
     {
         return $this->config['help_site'] ?? 'https://bbs.tampermonkey.net.cn/thread-3311-1-1.html';
+    }
+
+    public function replyEnable(): bool
+    {
+        return $this->config['reply_enable'] === '1';
     }
 
 }
@@ -180,7 +186,10 @@ class plugin_codfrm_markdown_forum extends plugin_codfrm_markdown
 
     function viewthread_fastpost_btn_extra()
     {
-        return $this->mdEditor('#fastpostform .plc .cl', '#fastpostform', "dz");
+        if (config::getInstance()->replyEnable()) {
+            return $this->mdEditor('#fastpostform .plc .cl', '#fastpostform', "dz");
+        }
+        return "";
     }
 
     function viewthread_posttop_output()

@@ -2,7 +2,7 @@
 <root>
 	<item id="Title"><![CDATA[Discuz! Plugin]]></item>
 	<item id="Version"><![CDATA[X3.1,X3.2,X3.3,X3.4,X3.5]]></item>
-	<item id="Time"><![CDATA[2023-12-08 11:42]]></item>
+	<item id="Time"><![CDATA[2024-06-20 11:39]]></item>
 	<item id="From"><![CDATA[Discuz! Board (http://127.0.0.1/)]]></item>
 	<item id="Data">
 		<item id="plugin">
@@ -14,7 +14,7 @@
 			<item id="datatables"><![CDATA[]]></item>
 			<item id="directory"><![CDATA[codfrm_markdown/]]></item>
 			<item id="copyright"><![CDATA[blog.icodef.com]]></item>
-			<item id="version"><![CDATA[1.2.0]]></item>
+			<item id="version"><![CDATA[1.2.1]]></item>
 			<item id="__modules">
 				<item id="0">
 					<item id="name"><![CDATA[markdown]]></item>
@@ -73,6 +73,15 @@
 				<item id="variable"><![CDATA[help_site]]></item>
 				<item id="type"><![CDATA[text]]></item>
 				<item id="value"><![CDATA[https://bbs.tampermonkey.net.cn/thread-3311-1-1.html]]></item>
+				<item id="extra"><![CDATA[]]></item>
+			</item>
+			<item id="3">
+				<item id="displayorder"><![CDATA[0]]></item>
+				<item id="title"><![CDATA[回复时开启]]></item>
+				<item id="description"><![CDATA[]]></item>
+				<item id="variable"><![CDATA[reply_enable]]></item>
+				<item id="type"><![CDATA[radio]]></item>
+				<item id="value"><![CDATA[1]]></item>
 				<item id="extra"><![CDATA[]]></item>
 			</item>
 		</item>

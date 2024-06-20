@@ -115,7 +115,7 @@
     cursor: pointer;
 }
 
-.markdown-body{
+.markdown-body {
     padding: 0 8px;
 }
 
@@ -123,6 +123,10 @@
     cursor: pointer;
 }
 
-.katex-html[aria-hidden="true"]{
+.katex-html[aria-hidden="true"] {
     display: none;
+}
+
+.tui-katex {
+    text-align: center;
 }
