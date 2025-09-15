@@ -1,6 +1,10 @@
 import 'github-markdown-css/github-markdown-light.css';
 import './viewer.css';
+import Prism from "prismjs";
+import './prismjs';
 import renderMathInElement from "katex/contrib/auto-render";
+
+Prism.highlightAllUnder(document);
 
 function enableEmoji() {
     window.addEventListener("DOMContentLoaded", () => {
