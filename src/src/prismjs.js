@@ -16,6 +16,7 @@ import 'prismjs/components/prism-typescript.min';
 import 'prismjs/components/prism-bash.min';
 import 'prismjs/components/prism-python.min';
 import 'prismjs/components/prism-css.min';
+import 'prismjs/components/prism-tsx.min';
 
 // toolbar
 import 'prismjs/plugins/toolbar/prism-toolbar.min.css';
